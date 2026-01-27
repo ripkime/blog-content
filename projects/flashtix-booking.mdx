@@ -166,10 +166,12 @@ func (r *repo) BookSeat(ctx context.Context, seatID uuid.UUID, userID uuid.UUID)
 
     return tx.Commit()
 }
+```
 
 ---
 
 ## The Waiting Room (Rate Limiting)
+
 ### Before hitting the database, users are put into a Redis Sorted Set. A background worker allows only N users per second to proceed to the checkout page.
 
 ```go title="internal/repository/booking.go"
@@ -190,18 +192,19 @@ func ProcessQueue() {
         }
     }
 }
+```
 
 ---
 
 ## Results & Performance
 ### We conducted a load test using K6 with 5,000 virtual users trying to buy 100 tickets simultaneously.
 
-- Overselling: 0 (Zero). The database constraints held up perfectly.
-- Latency: Average p95 response time was 120ms for the queue acknowledgment.
-- Throughput: Successfully processed ~1,200 transactions per second on a modest t3.medium instance.
+- **Overselling**: 0 (Zero). The database constraints held up perfectly.
+- **Latency**: Average p95 response time was 120ms for the queue acknowledgment.
+- **Throughput**: Successfully processed ~1,200 transactions per second on a modest t3.medium instance.
 
 ## Future Improvements
 ### While the system is robust, there's always room for growth:
 
-- 1. **Geo-Replication**: Replicate the read-database to different regions for faster seat viewing.
-- 2. **Dynamic Pricing**: Implement AI-based pricing depending on the demand velocity.
+1. **Geo-Replication**: Replicate the read-database to different regions for faster seat viewing.
+2. **Dynamic Pricing**: Implement AI-based pricing depending on the demand velocity.
