@@ -1,0 +1,122 @@
+---
+title: "E-Commerce Microservices Architecture Documentation"
+description: "A comprehensive breakdown of the scalable, event-driven backend system designed for high-volume retail transactions."
+date: "Oct 24, 2025"
+readTime: "15 min"
+author: "Rifki"
+youtubeId: "cVMX7_m75-s"
+repoLink: "https://github.com/ripkime/ecommerce"
+demoLink: "https://demo.ripki.me"
+---
+
+<script>
+  import { Terminal, Monitor, Http, Maximize } from '$lib/icons';
+</script>
+
+## Project Overview
+
+The primary goal of **Project Alpha** was to decouple a legacy monolithic application into independent, loosely coupled services. The monolith was suffering from deployment bottlenecks, where a single bug fix required a full system redeploy.
+
+Key improvements include:
+
+- **Scalability:** Ability to scale individual services like Inventory or Checkout based on demand.
+- **Resilience:** Ensuring that a failure in the Notification service doesn't bring down the Payment gateway.
+- **Developer Velocity:** Allowing smaller teams to own, build, and deploy specific domains independently.
+
+---
+
+## Technology Stack
+
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 not-prose">
+  <div class="rounded-xl border border-white/5 bg-white/5 p-6 transition-colors hover:border-primary/30 hover:bg-white/[0.07]">
+    <div class="mb-4 flex items-center gap-3">
+      <div class="flex size-10 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
+        <Terminal class="size-6" />
+      </div>
+      <h3 class="text-lg font-bold text-white m-0">Frontend Core</h3>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <span class="rounded-md border border-white/5 bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-300">SvelteKit</span>
+      <span class="rounded-md border border-white/5 bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-300">TypeScript</span>
+      <span class="rounded-md border border-white/5 bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-300">Tailwind CSS</span>
+    </div>
+  </div>
+
+  <div class="rounded-xl border border-white/5 bg-white/5 p-6 transition-colors hover:border-primary/30 hover:bg-white/[0.07]">
+    <div class="mb-4 flex items-center gap-3">
+      <div class="flex size-10 items-center justify-center rounded-lg bg-green-500/10 text-green-400">
+        <Terminal class="size-6" />
+      </div>
+      <h3 class="text-lg font-bold text-white m-0">Backend Services</h3>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <span class="rounded-md border border-white/5 bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-300">Go (Golang)</span>
+      <span class="rounded-md border border-white/5 bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-300">Fiber</span>
+      <span class="rounded-md border border-white/5 bg-white/5 px-2.5 py-1 font-mono text-xs text-slate-300">PostgreSQL</span>
+    </div>
+  </div>
+</div>
+
+---
+
+## System Architecture
+
+High-level overview of service interaction and data flow.
+
+<div class="group relative overflow-hidden rounded-xl border border-white/10 p-8 shadow-2xl glass-panel not-prose my-8">
+    <div class="pointer-events-none absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-[100px]"></div>
+    <div class="relative z-10 flex flex-col items-center">
+        <div class="mb-8 flex w-full items-center justify-between border-b border-white/10 pb-4">
+            <span class="font-mono text-xs tracking-widest text-slate-500 uppercase">Figure 1.2: Event Bus Topology</span>
+        </div>
+        <div class="flex h-64 w-full items-center justify-center gap-4 md:gap-12">
+            <div class="flex flex-col items-center gap-3">
+                <div class="flex size-16 items-center justify-center rounded-2xl border border-white/20 bg-slate-800 shadow-lg">
+                    <Monitor class="size-7 text-white" />
+                </div>
+                <span class="text-xs text-slate-400">Client</span>
+            </div>
+            <div class="relative h-px w-12 bg-slate-600 md:w-24">
+                <span class="absolute -top-4 left-1/2 -translate-x-1/2 font-mono text-[10px] text-slate-500">gRPC</span>
+            </div>
+            <div class="relative flex flex-col items-center gap-3">
+                <div class="relative flex size-20 items-center justify-center rounded-full border border-primary/50 bg-primary/10">
+                    <div class="absolute inset-0 animate-ping rounded-full bg-primary/20 opacity-20"></div>
+                    <Http class="size-7 text-white" />
+                </div>
+                <span class="font-mono text-xs text-primary">API Gateway</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+---
+
+## Order Processing Logic
+
+A snippet from the order service showing idempotent processing using Redis locks.
+
+```go title="order_handler.go"
+func CreateOrder(c *fiber.Ctx) error {
+    // 1. Parse Body
+    var dto CreateOrderDTO
+    if err := c.BodyParser(&dto); err != nil {
+        return c.Status(400).JSON(fiber.Map{"error": "Invalid payload"})
+    }
+
+    // 2. Check Redis Lock (Idempotency)
+    lockKey := fmt.Sprintf("lock:order:%s", dto.OrderID)
+    isLocked, _ := redisClient.Get(ctx, lockKey).Result()
+
+    if isLocked == "1" {
+        return c.Status(429).JSON(fiber.Map{"msg": "Processing..."})
+    }
+
+    // 3. Acquire Lock (TTL 30s)
+    redisClient.Set(ctx, lockKey, "1", 30*time.Second)
+
+    // 4. Business Logic ...
+    result := orderService.Execute(dto)
+
+    return c.JSON(fiber.Map{"success": true, "data": result})
+}
