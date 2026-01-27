@@ -165,7 +165,9 @@ func (r *repo) BookSeat(ctx context.Context, seatID uuid.UUID, userID uuid.UUID)
     }
 
     return tx.Commit()
-}```
+}
+
+---
 
 ## The Waiting Room (Rate Limiting)
 ### Before hitting the database, users are put into a Redis Sorted Set. A background worker allows only N users per second to proceed to the checkout page.
@@ -187,7 +189,9 @@ func ProcessQueue() {
             notifyUserWebSocket(user.Member, token)
         }
     }
-}```
+}
+
+---
 
 ## Results & Performance
 ### We conducted a load test using K6 with 5,000 virtual users trying to buy 100 tickets simultaneously.
