@@ -9,10 +9,6 @@ repoLink: "https://github.com/ripkime/ecommerce"
 demoLink: "https://demo.ripki.me"
 ---
 
-<script>
-  import { Terminal, Monitor, Http, Maximize } from '$lib/icons';
-</script>
-
 ## Project Overview
 
 The primary goal of **Project Alpha** was to decouple a legacy monolithic application into independent, loosely coupled services. The monolith was suffering from deployment bottlenecks, where a single bug fix required a full system redeploy.
@@ -31,7 +27,7 @@ Key improvements include:
   <div class="rounded-xl border border-white/5 bg-white/5 p-6 transition-colors hover:border-primary/30 hover:bg-white/[0.07]">
     <div class="mb-4 flex items-center gap-3">
       <div class="flex size-10 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
-        <Terminal class="size-6" />
+       
       </div>
       <h3 class="text-lg font-bold text-white m-0">Frontend Core</h3>
     </div>
@@ -45,7 +41,7 @@ Key improvements include:
   <div class="rounded-xl border border-white/5 bg-white/5 p-6 transition-colors hover:border-primary/30 hover:bg-white/[0.07]">
     <div class="mb-4 flex items-center gap-3">
       <div class="flex size-10 items-center justify-center rounded-lg bg-green-500/10 text-green-400">
-        <Terminal class="size-6" />
+        
       </div>
       <h3 class="text-lg font-bold text-white m-0">Backend Services</h3>
     </div>
@@ -72,7 +68,6 @@ High-level overview of service interaction and data flow.
         <div class="flex h-64 w-full items-center justify-center gap-4 md:gap-12">
             <div class="flex flex-col items-center gap-3">
                 <div class="flex size-16 items-center justify-center rounded-2xl border border-white/20 bg-slate-800 shadow-lg">
-                    <Monitor class="size-7 text-white" />
                 </div>
                 <span class="text-xs text-slate-400">Client</span>
             </div>
@@ -82,7 +77,7 @@ High-level overview of service interaction and data flow.
             <div class="relative flex flex-col items-center gap-3">
                 <div class="relative flex size-20 items-center justify-center rounded-full border border-primary/50 bg-primary/10">
                     <div class="absolute inset-0 animate-ping rounded-full bg-primary/20 opacity-20"></div>
-                    <Http class="size-7 text-white" />
+                    
                 </div>
                 <span class="font-mono text-xs text-primary">API Gateway</span>
             </div>
