@@ -10,10 +10,6 @@ repoLink: "https://github.com/ripkime/flashtix"
 demoLink: "https://flashtix.ripki.me"
 ---
 
-<script>
-  import { Terminal, Database, Cpu, Layers, Server, Globe } from '$lib/icons';
-</script>
-
 ## The Challenge
 
 Building a ticketing platform is deceptively simple until you hit scale. The core problem isn't just serving content, but managing **State Consistency** under extreme concurrency.
@@ -35,7 +31,7 @@ I chose Golang for its raw performance and excellent concurrency primitives (Gor
   <div class="rounded-xl border border-white/10 bg-[#0a0a0c] p-6 transition-colors hover:border-primary/30">
     <div class="mb-4 flex items-center gap-3">
       <div class="flex size-10 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400">
-        <Server class="size-6" />
+
       </div>
       <h3 class="text-lg font-bold text-white m-0">Core Backend</h3>
     </div>
@@ -49,7 +45,7 @@ I chose Golang for its raw performance and excellent concurrency primitives (Gor
   <div class="rounded-xl border border-white/10 bg-[#0a0a0c] p-6 transition-colors hover:border-primary/30">
     <div class="mb-4 flex items-center gap-3">
       <div class="flex size-10 items-center justify-center rounded-lg bg-green-500/10 text-green-400">
-        <Database class="size-6" />
+
       </div>
       <h3 class="text-lg font-bold text-white m-0">Data & Queues</h3>
     </div>
@@ -74,7 +70,7 @@ To handle the load, I decoupled the **Booking Request** from the **Order Process
             
             <div class="flex flex-col items-center gap-2">
                 <div class="flex size-14 items-center justify-center rounded-xl border border-white/20 bg-slate-800 shadow-lg">
-                    <Globe class="size-6 text-white" />
+                   
                 </div>
                 <span class="text-[10px] uppercase tracking-widest text-slate-500">User</span>
             </div>
@@ -83,7 +79,7 @@ To handle the load, I decoupled the **Booking Request** from the **Order Process
 
             <div class="flex flex-col items-center gap-2">
                 <div class="flex size-14 items-center justify-center rounded-xl border border-primary/50 bg-primary/10 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                    <Layers class="size-6 text-primary" />
+                  
                 </div>
                 <span class="text-[10px] uppercase tracking-widest text-primary">Gateway</span>
             </div>
@@ -92,7 +88,7 @@ To handle the load, I decoupled the **Booking Request** from the **Order Process
 
             <div class="flex flex-col items-center gap-2">
                 <div class="flex size-14 items-center justify-center rounded-xl border border-orange-500/30 bg-orange-500/10">
-                    <Cpu class="size-6 text-orange-400" />
+                   
                 </div>
                 <span class="text-[10px] uppercase tracking-widest text-orange-400">RabbitMQ</span>
             </div>
@@ -101,7 +97,7 @@ To handle the load, I decoupled the **Booking Request** from the **Order Process
 
             <div class="flex flex-col items-center gap-2">
                 <div class="flex size-14 items-center justify-center rounded-xl border border-green-500/30 bg-green-500/10">
-                    <Database class="size-6 text-green-400" />
+                    
                 </div>
                 <span class="text-[10px] uppercase tracking-widest text-green-400">Worker</span>
             </div>
